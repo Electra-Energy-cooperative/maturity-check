@@ -857,10 +857,16 @@ footer details[open] summary { margin-bottom: 10px; }
       '<p lang="el">Τα αρχεία δεδομένων δεν φορτώθηκαν. Ανοίξτε τη σελίδα μέσω διεύθυνσης ιστού και όχι με διπλό κλικ στο αρχείο.</p></div>';
   }
 
+  // Looks for each file in the data folder first, then next to index.html
+  // (in case the CSV files were uploaded without their folder).
+  function getText(path) {
+    const get = p => fetch(p, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(p + ' (' + r.status + ')'); return r.text(); });
+    const flat = path.replace(/^data\//, '');
+    return get(path).catch(err => (flat !== path ? get(flat) : Promise.reject(err)));
+  }
+
   Promise.all(Object.keys(FILES).map(k =>
-    fetch(FILES[k], { cache: 'no-cache' })
-      .then(r => { if (!r.ok) throw new Error(FILES[k] + ' (' + r.status + ')'); return r.text(); })
-      .then(txt => [k, parseCSV(txt)])
+    getText(FILES[k]).then(txt => [k, parseCSV(txt)])
   )).then(entries => {
     entries.forEach(([k, v]) => { D[k] = v; });
     prepare();
