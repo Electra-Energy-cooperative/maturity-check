@@ -1,0 +1,16 @@
+﻿stage,dimension,score,n,source
+emerging,GOV,1.8,4,illustrative
+emerging,TEC,1.4,4,illustrative
+emerging,ECO,1.5,4,illustrative
+emerging,SOC,2.1,4,illustrative
+emerging,SRV,1.2,4,illustrative
+early,GOV,3.1,5,illustrative
+early,TEC,2.9,5,illustrative
+early,ECO,2.6,5,illustrative
+early,SOC,2.8,5,illustrative
+early,SRV,2.0,5,illustrative
+mature,GOV,4.2,4,illustrative
+mature,TEC,4.0,4,illustrative
+mature,ECO,3.9,4,illustrative
+mature,SOC,3.7,4,illustrative
+mature,SRV,3.1,4,illustrative

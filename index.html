@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Energy Community Maturity Check</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Commissioner:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: one centred working column (max 920px) under a header band; questions run as a ladder of five levels;
+   results use a two-column grid (chart | scores) that stacks to one column on phones. */
+:root {
+  --bg: #F2F4EF;
+  --surface: #FFFFFF;
+  --ink: #14221C;
+  --muted: #56675E;
+  --line: #D5DDD6;
+  --accent: #1D6A4B;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #DDEDE4;
+  --bench: #A86A12;
+  --bench-soft: #F6EAD5;
+  --warn: #A3412A;
+  --f-display: "Commissioner", "Source Sans 3", system-ui, sans-serif;
+  --f-body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1411; --surface: #151F1A; --ink: #E1EAE4; --muted: #96A89E; --line: #2A3832;
+    --accent: #5DC497; --accent-ink: #0A1912; --accent-soft: #1C3A2C;
+    --bench: #E2A54C; --bench-soft: #3A2D18; --warn: #F08C72;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D1411; --surface: #151F1A; --ink: #E1EAE4; --muted: #96A89E; --line: #2A3832;
+  --accent: #5DC497; --accent-ink: #0A1912; --accent-soft: #1C3A2C;
+  --bench: #E2A54C; --bench-soft: #3A2D18; --warn: #F08C72;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 920px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.label {
+  font-family: var(--f-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.num { font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+
+/* ---------- header ---------- */
+.top { background: var(--surface); border-bottom: 1px solid var(--line); }
+.top .wrap { padding-block: 18px 14px; display: grid; gap: 12px; }
+.top-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.brand { display: grid; gap: 2px; min-width: 0; }
+.brand h1 { font-size: 1.35rem; font-weight: 700; }
+.langs { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; }
+.langs button {
+  border: 0; background: transparent; border-radius: 999px; padding: 4px 12px; cursor: pointer;
+  font-weight: 600; font-size: 0.85rem; color: var(--muted);
+}
+.langs button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.proto {
+  font-size: 0.875rem;
+  background: var(--bench-soft);
+  border-left: 3px solid var(--bench);
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+main.wrap { padding-block: 32px 48px; }
+
+/* ---------- buttons & fields ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 18px; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-weight: 600;
+}
+.btn:hover:not(:disabled) { border-color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover:not(:disabled) { filter: brightness(1.08); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.btn.quiet { border-color: transparent; background: transparent; color: var(--muted); }
+.btn.quiet:hover { color: var(--ink); }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.field { display: grid; gap: 6px; max-width: 420px; }
+.field label { font-weight: 600; font-size: 0.95rem; }
+.field input {
+  min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface);
+}
+.field input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+
+/* ---------- intro ---------- */
+.intro { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+.intro-main { display: grid; gap: 22px; }
+.display { font-size: clamp(1.75rem, 4.2vw, 2.5rem); font-weight: 700; line-height: 1.12; }
+.lede { font-size: 1.1rem; color: var(--muted); max-width: 60ch; }
+.note { font-size: 0.9rem; color: var(--muted); display: flex; gap: 8px; align-items: flex-start; }
+.note svg { flex: none; margin-top: 3px; }
+.areas { display: grid; gap: 12px; }
+.areas ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.areas li { display: grid; grid-template-columns: 3.2rem minmax(0, 1fr); gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.code {
+  font-family: var(--f-data); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em;
+  color: var(--accent); padding-top: 2px;
+}
+.areas strong { display: block; font-family: var(--f-display); font-weight: 600; }
+.areas .desc { display: block; font-size: 0.9rem; color: var(--muted); }
+.areas .meta { display: block; font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+
+/* ---------- questionnaire ---------- */
+.steps { overflow-x: auto; margin-bottom: 28px; }
+.steps ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(120px, 1fr)); gap: 6px; }
+.step {
+  width: 100%; text-align: left; cursor: pointer; display: grid; gap: 2px;
+  border: 0; border-top: 3px solid var(--line); background: transparent; padding: 8px 2px 4px;
+}
+.step .step-name { font-weight: 600; font-size: 0.92rem; }
+.step .step-prog { font-family: var(--f-data); font-size: 0.75rem; color: var(--muted); }
+.step.done { border-top-color: var(--accent-soft); }
+.step.done .step-prog { color: var(--accent); }
+.step.current { border-top-color: var(--accent); }
+.qsec { display: grid; gap: 18px; }
+.qsec > .lede { margin-bottom: 8px; }
+.eyebrow { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.qcard { padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); min-width: 0; }
+.q { margin: 0; padding: 0; border: 0; min-width: 0; }
+.q legend { padding: 0; margin: 0 0 12px; width: 100%; }
+.opts { display: grid; gap: 6px; }
+.qhead { display: flex; gap: 12px; align-items: baseline; }
+.qhead .qid { font-family: var(--f-data); font-size: 0.8rem; color: var(--muted); flex: none; }
+.qhead .qtext { font-family: var(--f-display); font-weight: 600; font-size: 1.08rem; line-height: 1.35; }
+.ladder { display: grid; gap: 6px; }
+.rung {
+  position: relative; display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: 12px; align-items: center;
+  padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; background: var(--surface);
+}
+.rung input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.rung:hover { border-color: var(--accent); }
+.rung .lvl {
+  width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center;
+  font-family: var(--f-data); font-weight: 600; font-size: 0.9rem;
+  border: 1.5px solid var(--line); color: var(--muted); background: var(--bg);
+}
+.rung .txt { font-size: 0.97rem; }
+.rung:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.rung:has(input:checked) .lvl { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.rung:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rung.na { grid-template-columns: minmax(0, 1fr); border-style: dashed; padding-block: 7px; }
+.rung.na .txt { font-size: 0.9rem; color: var(--muted); }
+.rung.na:has(input:checked) { background: var(--bg); border-style: solid; border-color: var(--muted); }
+.rung.na:has(input:checked) .txt { color: var(--ink); }
+.qnav { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 8px; }
+.count { font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ---------- results ---------- */
+.res { display: grid; gap: 36px; }
+.res-head { display: grid; gap: 8px; }
+.res-head .sub { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; color: var(--muted); font-size: 0.92rem; }
+.badge {
+  display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 600;
+  background: var(--bench-soft); color: var(--ink); border: 1px solid var(--bench);
+}
+.scorecard {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px 36px; align-items: center;
+  padding: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+}
+.big { display: grid; gap: 4px; }
+.big .valrow { display: flex; align-items: baseline; gap: 6px; }
+.big .value { font-family: var(--f-display); font-variant-numeric: tabular-nums; font-size: 3.6rem; font-weight: 700; line-height: 1; letter-spacing: -0.02em; }
+.big .of { font-family: var(--f-data); font-size: 1.1rem; color: var(--muted); }
+.stagebox { display: grid; gap: 6px; justify-items: start; }
+.pill {
+  display: inline-block; padding: 3px 12px; border-radius: 999px; font-weight: 700; font-family: var(--f-display);
+  background: var(--accent); color: var(--accent-ink);
+}
+.stagebox p { color: var(--muted); max-width: 52ch; }
+.scale { grid-column: 1 / -1; display: grid; gap: 6px; padding-top: 4px; }
+.bandnames { display: flex; }
+.bandnames span { padding: 0 6px 0 2px; font-size: 0.8rem; font-weight: 600; color: var(--muted); min-width: 0; line-height: 1.25; }
+.track { position: relative; height: 14px; display: flex; border-radius: 7px; }
+.band { height: 100%; }
+.band:first-child { border-radius: 7px 0 0 7px; }
+.band:last-of-type { border-radius: 0 7px 7px 0; }
+.band.b0 { background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
+.band.b1 { background: color-mix(in srgb, var(--accent) 26%, var(--surface)); }
+.band.b2 { background: color-mix(in srgb, var(--accent) 42%, var(--surface)); }
+.band.b3 { background: color-mix(in srgb, var(--accent) 58%, var(--surface)); }
+.marker { position: absolute; top: -6px; bottom: -6px; width: 0; }
+.marker::before {
+  content: ""; position: absolute; left: -2px; top: 0; bottom: 0; width: 4px; border-radius: 2px; background: var(--ink);
+  box-shadow: 0 0 0 2px var(--surface);
+}
+.ticks { position: relative; height: 1.2em; font-family: var(--f-data); font-size: 0.75rem; color: var(--muted); }
+.ticks span { position: absolute; transform: translateX(-50%); }
+.ticks span:first-child { transform: none; }
+.ticks span:last-child { transform: translateX(-100%); }
+
+.compare { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.panel { display: grid; gap: 14px; min-width: 0; }
+.panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.panel-head h2 { font-size: 1.15rem; font-weight: 600; }
+.selectwrap { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--muted); }
+.selectwrap select {
+  min-height: 38px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); padding: 0 8px; color: var(--ink);
+}
+.radar svg { width: 100%; height: auto; display: block; }
+.radar .ring { fill: none; stroke: var(--line); stroke-width: 1; }
+.radar .ring.outer { stroke-width: 1.5; }
+.radar .spoke { stroke: var(--line); stroke-width: 1; fill: none; }
+.radar .ringlbl { fill: var(--muted); font-family: var(--f-data); font-size: 10px; }
+.radar .axlbl { fill: var(--ink); font-family: var(--f-body); font-size: 13px; font-weight: 600; }
+.radar .bench { fill: none; stroke: var(--bench); stroke-width: 2; stroke-dasharray: 6 4; }
+.radar .you { fill: var(--accent); fill-opacity: 0.2; stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; }
+.radar .youpt { fill: var(--accent); stroke: var(--surface); stroke-width: 1.5; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 0.85rem; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 18px; height: 0; border-top: 3px solid var(--accent); display: inline-block; }
+.sw.b { border-top: 3px dashed var(--bench); }
+
+.dims { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.dimrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.dimrow .dname { font-weight: 600; min-width: 0; }
+.dimrow .vals { display: flex; gap: 14px; font-family: var(--f-data); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+.vals .you-v { color: var(--ink); font-weight: 600; min-width: 2.2em; text-align: right; }
+.vals .b-v { color: var(--bench); min-width: 2.2em; text-align: right; }
+.vals .gap { min-width: 3.2em; text-align: right; }
+.gap.neg { color: var(--warn); }
+.gap.pos { color: var(--accent); }
+.dimrow .bar { grid-column: 1 / -1; position: relative; height: 10px; border-radius: 5px; background: var(--bg); border: 1px solid var(--line); }
+.bar .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 5px; background: var(--accent); }
+.bar .tick { position: absolute; top: -5px; bottom: -5px; width: 3px; margin-left: -1.5px; border-radius: 2px; background: var(--bench); }
+.dims-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding-bottom: 6px; }
+.dims-head .vals { display: flex; gap: 14px; }
+.dims-head .vals span { min-width: 2.2em; text-align: right; }
+.dims-head .vals span:last-child { min-width: 3.2em; }
+
+.advice { display: grid; gap: 14px; }
+.advice-head { display: grid; gap: 2px; }
+.advice-head h2 { font-size: 1.15rem; font-weight: 600; }
+.advice-head p { color: var(--muted); font-size: 0.92rem; }
+.advice-list { display: grid; gap: 10px; }
+.tip {
+  display: grid; grid-template-columns: 3.2rem minmax(0, 1fr) auto; gap: 6px 12px; align-items: baseline;
+  padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+}
+.tip h3 { font-size: 1rem; font-weight: 600; }
+.tip .chip { font-family: var(--f-data); font-size: 0.85rem; font-weight: 600; }
+.tip .body { grid-column: 2 / -1; display: grid; gap: 8px; }
+.tip .learn { font-size: 0.88rem; color: var(--muted); }
+.tip .learn a { color: var(--accent); font-weight: 600; }
+.tip .pending { font-style: italic; }
+
+.res-actions { display: grid; gap: 10px; }
+.confirm {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 14px;
+  border: 1px solid var(--warn); border-radius: 8px; background: var(--surface);
+}
+.confirm p { font-weight: 600; margin-right: auto; }
+.copybox { display: grid; gap: 6px; }
+.copybox textarea {
+  width: 100%; min-height: 140px; font-family: var(--f-data); font-size: 0.8rem; padding: 8px;
+  border-radius: 8px; border: 1px solid var(--line); background: var(--surface);
+}
+.toast { font-size: 0.9rem; color: var(--accent); font-weight: 600; align-self: center; }
+
+.error {
+  padding: 20px; border: 1px solid var(--warn); border-radius: var(--radius); background: var(--surface); display: grid; gap: 8px;
+}
+
+/* ---------- footer ---------- */
+footer { border-top: 1px solid var(--line); }
+footer .wrap { padding-block: 24px 40px; display: grid; gap: 16px; font-size: 0.85rem; color: var(--muted); }
+footer details { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 16px; }
+footer summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+footer details[open] summary { margin-bottom: 10px; }
+.files { overflow-x: auto; }
+.files table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+.files th, .files td { text-align: left; padding: 6px 10px 6px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.files td:first-child { font-family: var(--f-data); color: var(--ink); white-space: nowrap; }
+.files td.n { font-family: var(--f-data); text-align: right; white-space: nowrap; }
+
+@media (max-width: 760px) {
+  .intro, .compare { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .scorecard { grid-template-columns: minmax(0, 1fr); padding: 18px; }
+  .tip { grid-template-columns: minmax(0, 1fr) auto; }
+  .tip .code { grid-column: 1 / -1; }
+  .tip .body { grid-column: 1 / -1; }
+  .qcard { padding: 16px 14px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .rung, .btn, .step { transition: border-color .15s, background-color .15s; }
+}
+@media print {
+  .langs, .proto, .res-actions, footer details, .steps { display: none !important; }
+  body { background: #fff; color: #000; }
+  .scorecard, .tip { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="top-row">
+      <div class="brand">
+        <span class="label" id="projectTag">ECHO</span>
+        <h1 id="appTitle">Energy Community Maturity Check</h1>
+      </div>
+      <div class="langs" id="langs" role="group" aria-label="Language"></div>
+    </div>
+    <p class="proto" id="protoNote">Prototype</p>
+  </div>
+</header>
+
+<main class="wrap" id="view" aria-live="polite">
+  <p class="lede">Loading…</p>
+</main>
+
+<footer>
+  <div class="wrap" id="foot"></div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  // Every piece of content comes from these files. Edit the CSVs, not this code.
+  const FILES = {
+    ui: 'data/ui.csv',
+    dimensions: 'data/dimensions.csv',
+    questions: 'data/questions.csv',
+    stages: 'data/stages.csv',
+    benchmarks: 'data/benchmarks.csv',
+    advice: 'data/advice.csv',
+    example: 'data/example.csv'
+  };
+  const FILE_INFO = {
+    ui: 'Interface text, one column per language',
+    dimensions: 'The five areas and their weights',
+    questions: 'Questions and the five level descriptions',
+    stages: 'Maturity stages and the score where each starts',
+    benchmarks: 'Average score per stage and area (pilot data)',
+    advice: 'Next-step advice per area and score band',
+    example: 'Answers of the fictional example community'
+  };
+  const STORE_KEY = 'echo-maturity-check-v1';
+  const EMBEDDED = (function () { try { return window.self !== window.top; } catch (e) { return true; } })();
+
+  const D = {};
+  const S = { lang: 'en', name: '', answers: {}, view: 'intro', step: 0, example: false, compare: null };
+  const view = document.getElementById('view');
+
+  // ---------- CSV ----------
+  function parseCSV(text) {
+    text = text.replace(/^﻿/, '');
+    const first = text.split(/\r?\n/, 1)[0];
+    // Excel with a Greek or other European locale saves with semicolons.
+    const delim = first.split(';').length > first.split(',').length ? ';' : ',';
+    const rows = []; let row = [], field = '', quoted = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (quoted) {
+        if (c === '"') { if (text[i + 1] === '"') { field += '"'; i++; } else quoted = false; }
+        else field += c;
+      } else if (c === '"') quoted = true;
+      else if (c === delim) { row.push(field); field = ''; }
+      else if (c === '\n' || c === '\r') {
+        if (c === '\r' && text[i + 1] === '\n') i++;
+        row.push(field); rows.push(row); row = []; field = '';
+      } else field += c;
+    }
+    if (field !== '' || row.length) { row.push(field); rows.push(row); }
+    const header = (rows.shift() || []).map(h => h.trim());
+    return rows
+      .filter(r => r.some(v => v.trim() !== ''))
+      .map(r => Object.fromEntries(header.map((h, i) => [h, (r[i] == null ? '' : r[i]).trim()])));
+  }
+  const num = v => { const n = parseFloat(String(v == null ? '' : v).replace(',', '.')); return isNaN(n) ? null : n; };
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  // ---------- text helpers ----------
+  function t(key, vars) {
+    const r = D.uiMap && D.uiMap[key];
+    let s = r ? (r[S.lang] || r.en || key) : key;
+    if (vars) for (const k in vars) s = s.split('{' + k + '}').join(vars[k]);
+    return s;
+  }
+  function f(row, base) { return (row && (row[base + '_' + S.lang] || row[base + '_en'])) || ''; }
+  function fmt(v, digits) {
+    if (v == null) return '–';
+    try { return v.toLocaleString(S.lang, { minimumFractionDigits: digits == null ? 1 : digits, maximumFractionDigits: digits == null ? 1 : digits }); }
+    catch (e) { return v.toFixed(digits == null ? 1 : digits); }
+  }
+  function fmtGap(v) {
+    if (v == null) return '–';
+    const s = fmt(Math.abs(v));
+    if (Math.abs(v) < 0.05) return '±' + fmt(0);
+    return (v > 0 ? '+' : '−') + s;
+  }
+
+  // ---------- state ----------
+  function restore() {
+    let s = null;
+    try { s = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch (e) { s = null; }
+    if (!s || typeof s !== 'object') return false;
+    if (typeof s.lang === 'string') S.lang = s.lang;
+    if (typeof s.name === 'string') S.name = s.name;
+    if (s.answers && typeof s.answers === 'object') S.answers = s.answers;
+    if (['intro', 'questions', 'results'].includes(s.view)) S.view = s.view;
+    if (Number.isInteger(s.step)) S.step = s.step;
+    S.example = !!s.example;
+    return true;
+  }
+  function persist() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({
+        lang: S.lang, name: S.name, answers: S.answers, view: S.view, step: S.step, example: S.example
+      }));
+    } catch (e) { /* storage unavailable: the tool still works for this visit */ }
+  }
+
+  // ---------- data preparation ----------
+  function prepare() {
+    D.uiMap = {};
+    D.ui.forEach(r => { D.uiMap[r.key] = r; });
+    D.langs = Object.keys(D.ui[0] || { en: 1 }).filter(k => k !== 'key');
+    D.dims = D.dimensions;
+    D.qByDim = {};
+    D.dims.forEach(d => { D.qByDim[d.id] = []; });
+    D.questions.forEach(q => { (D.qByDim[q.dimension] = D.qByDim[q.dimension] || []).push(q); });
+    D.qs = D.dims.flatMap(d => D.qByDim[d.id]);
+    D.stagesSorted = D.stages.slice().sort((a, b) => num(a.min_score) - num(b.min_score));
+    D.bench = {};
+    D.benchmarks.forEach(r => {
+      (D.bench[r.stage] = D.bench[r.stage] || {})[r.dimension] = { score: num(r.score), n: r.n, source: r.source };
+    });
+    D.adviceBy = {};
+    D.advice.forEach(r => { (D.adviceBy[r.dimension] = D.adviceBy[r.dimension] || []).push(r); });
+    Object.values(D.adviceBy).forEach(list => list.sort((a, b) => num(a.max_score) - num(b.max_score)));
+  }
+
+  // ---------- scoring ----------
+  function dimScore(d) {
+    let s = 0, w = 0;
+    (D.qByDim[d.id] || []).forEach(q => {
+      const a = S.answers[q.id];
+      if (a >= 1 && a <= 5) { const wt = num(q.weight); const ww = wt == null ? 1 : wt; s += a * ww; w += ww; }
+    });
+    return w ? s / w : null;
+  }
+  function overallScore() {
+    let s = 0, w = 0;
+    D.dims.forEach(d => {
+      const v = dimScore(d);
+      if (v != null) { const wt = num(d.weight); const ww = wt == null ? 1 : wt; s += v * ww; w += ww; }
+    });
+    return w ? s / w : null;
+  }
+  function stageFor(v) {
+    let st = D.stagesSorted[0];
+    if (v == null) return st;
+    D.stagesSorted.forEach(x => { if (v >= num(x.min_score)) st = x; });
+    return st;
+  }
+  function counts() {
+    let a = 0, scored = 0;
+    D.qs.forEach(q => { const v = S.answers[q.id]; if (v != null) { a++; if (v >= 1) scored++; } });
+    return { n: D.qs.length, a, scored };
+  }
+  function dimProgress(d) {
+    const qs = D.qByDim[d.id] || [];
+    const a = qs.filter(q => S.answers[q.id] != null).length;
+    return { a, n: qs.length, done: qs.length > 0 && a === qs.length };
+  }
+  function adviceFor(d, v) {
+    const list = D.adviceBy[d.id] || [];
+    return list.find(r => v <= num(r.max_score)) || list[list.length - 1] || null;
+  }
+
+  // ---------- chrome (header + footer) ----------
+  function renderChrome() {
+    document.documentElement.lang = S.lang;
+    document.getElementById('projectTag').textContent = t('project_tag');
+    document.getElementById('appTitle').textContent = t('app_title');
+    document.getElementById('protoNote').textContent = t('prototype_note');
+    const langs = document.getElementById('langs');
+    langs.innerHTML = D.langs.map(l => {
+      const r = D.uiMap.lang_label || {}; const nm = D.uiMap.lang_name || {};
+      return '<button type="button" data-lang="' + esc(l) + '" aria-pressed="' + (l === S.lang) + '" title="' + esc(nm[l] || l) + '">' + esc(r[l] || l.toUpperCase()) + '</button>';
+    }).join('');
+    const rowsInfo = Object.keys(FILES).map(k =>
+      '<tr><td>' + esc(FILES[k]) + '</td><td>' + esc(FILE_INFO[k]) + '</td><td class="n">' + (D[k] ? D[k].length : 0) + ' ' + esc(t('rows')) + '</td></tr>'
+    ).join('');
+    document.getElementById('foot').innerHTML =
+      '<details><summary>' + esc(t('how_title')) + '</summary><p style="margin-bottom:10px">' + esc(t('how_text')) +
+      '</p><div class="files"><table><tbody>' + rowsInfo + '</tbody></table></div></details>' +
+      '<p>' + esc(t('made_by')) + '</p><p>' + esc(t('funding')) + '</p>';
+  }
+
+  // ---------- intro ----------
+  const LOCK = '<svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>';
+
+  function renderIntro() {
+    const c = counts();
+    const resume = c.a > 0 && !S.example;
+    view.innerHTML =
+      '<section class="intro">' +
+        '<div class="intro-main">' +
+          '<h1 class="display">' + esc(t('intro_title')) + '</h1>' +
+          '<p class="lede">' + esc(t('intro_text', { n: D.qs.length })) + '</p>' +
+          '<div class="field"><label for="cname">' + esc(t('name_label')) + '</label>' +
+            '<input id="cname" type="text" maxlength="120" autocomplete="organization" value="' + esc(S.example ? '' : S.name) + '" placeholder="' + esc(t('name_placeholder')) + '"></div>' +
+          '<div class="actions">' +
+            '<button type="button" class="btn primary" data-action="start">' + esc(resume ? t('resume') : t('start')) + '</button>' +
+            '<button type="button" class="btn" data-action="example">' + esc(t('example')) + '</button>' +
+          '</div>' +
+          '<p class="note">' + LOCK + '<span>' + esc(t('privacy_note')) + '</span></p>' +
+        '</div>' +
+        '<aside class="areas"><h2 class="label">' + esc(t('areas_title')) + '</h2><ol>' +
+          D.dims.map(d =>
+            '<li><span class="code">' + esc(d.id) + '</span><div><strong>' + esc(f(d, 'name')) + '</strong>' +
+            '<span class="desc">' + esc(f(d, 'description')) + '</span>' +
+            '<span class="meta">' + esc(t('questions_count', { n: (D.qByDim[d.id] || []).length })) + '</span></div></li>'
+          ).join('') +
+        '</ol></aside>' +
+      '</section>';
+  }
+
+  // ---------- questionnaire ----------
+  function questionHTML(q) {
+    const a = S.answers[q.id];
+    let rungs = '';
+    for (let l = 1; l <= 5; l++) {
+      rungs += '<label class="rung"><input type="radio" name="' + esc(q.id) + '" value="' + l + '"' + (a === l ? ' checked' : '') + '>' +
+        '<span class="lvl">' + l + '</span><span class="txt">' + esc(f(q, 'level' + l)) + '</span></label>';
+    }
+    return '<div class="qcard"><fieldset class="q" id="q-' + esc(q.id) + '">' +
+      '<legend><span class="qhead"><span class="qid">' + esc(q.id) + '</span><span class="qtext">' + esc(f(q, 'question')) + '</span></span></legend>' +
+      '<div class="opts"><div class="ladder">' + rungs + '</div>' +
+      '<label class="rung na"><input type="radio" name="' + esc(q.id) + '" value="0"' + (a === 0 ? ' checked' : '') + '><span class="txt">' + esc(t('dont_know')) + '</span></label></div>' +
+      '</fieldset></div>';
+  }
+  function stepsHTML(current) {
+    return '<nav class="steps"><ol>' + D.dims.map((d, j) => {
+      const p = dimProgress(d);
+      return '<li><button type="button" class="step' + (j === current ? ' current' : '') + (p.done ? ' done' : '') + '" data-action="goto" data-step="' + j + '"' +
+        (j === current ? ' aria-current="step"' : '') + '>' +
+        '<span class="step-name">' + esc(f(d, 'short')) + '</span>' +
+        '<span class="step-prog" data-prog="' + esc(d.id) + '">' + p.a + '/' + p.n + '</span></button></li>';
+    }).join('') + '</ol></nav>';
+  }
+  function renderQuestions() {
+    const i = Math.max(0, Math.min(S.step, D.dims.length - 1));
+    S.step = i;
+    const d = D.dims[i];
+    const c = counts();
+    const last = i === D.dims.length - 1;
+    view.innerHTML = stepsHTML(i) +
+      '<section class="qsec">' +
+        '<p class="eyebrow">' + esc(t('step_of', { i: i + 1, n: D.dims.length })) + '</p>' +
+        '<h1 class="display">' + esc(f(d, 'name')) + '</h1>' +
+        '<p class="lede">' + esc(f(d, 'description')) + '</p>' +
+        (D.qByDim[d.id] || []).map(questionHTML).join('') +
+        '<div class="qnav">' +
+          '<button type="button" class="btn" data-action="prev"' + (i === 0 ? ' disabled' : '') + '>' + esc(t('back')) + '</button>' +
+          '<span class="count" id="count">' + esc(t('answered', { a: c.a, n: c.n })) + '</span>' +
+          (last
+            ? '<button type="button" class="btn primary" data-action="results">' + esc(t('see_results')) + '</button>'
+            : '<button type="button" class="btn primary" data-action="next">' + esc(t('next')) + '</button>') +
+        '</div>' +
+      '</section>';
+  }
+  function refreshProgress() {
+    D.dims.forEach(d => {
+      const p = dimProgress(d);
+      const el = view.querySelector('[data-prog="' + d.id + '"]');
+      if (el) { el.textContent = p.a + '/' + p.n; el.parentElement.classList.toggle('done', p.done); }
+    });
+    const c = counts();
+    const el = document.getElementById('count');
+    if (el) el.textContent = t('answered', { a: c.a, n: c.n });
+  }
+
+  // ---------- results ----------
+  function radarSVG(rows) {
+    const n = rows.length, R = 112, LR = R + 18;
+    const ang = i => (-90 + i * 360 / n) * Math.PI / 180;
+    const pt = (v, i) => [Math.cos(ang(i)) * R * v / 5, Math.sin(ang(i)) * R * v / 5];
+    const pts = vals => vals.map((v, i) => pt(v == null ? 0 : v, i).map(x => x.toFixed(1)).join(',')).join(' ');
+    let g = '';
+    for (let r = 1; r <= 5; r++) g += '<polygon class="ring' + (r === 5 ? ' outer' : '') + '" points="' + pts(rows.map(() => r)) + '"/>';
+    rows.forEach((_, i) => { const p = pt(5, i); g += '<line class="spoke" x1="0" y1="0" x2="' + p[0].toFixed(1) + '" y2="' + p[1].toFixed(1) + '"/>'; });
+    for (let r = 1; r <= 5; r++) g += '<text class="ringlbl" x="5" y="' + (-R * r / 5 + 11).toFixed(1) + '">' + r + '</text>';
+    const b = rows.map(r => r.b == null ? null : r.b);
+    if (b.some(v => v != null)) g += '<polygon class="bench" points="' + pts(b) + '"/>';
+    if (rows.some(r => r.you != null)) {
+      g += '<polygon class="you" points="' + pts(rows.map(r => r.you)) + '"/>';
+      rows.forEach((r, i) => { if (r.you != null) { const p = pt(r.you, i); g += '<circle class="youpt" r="4" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '"/>'; } });
+    }
+    rows.forEach((r, i) => {
+      const a = ang(i), x = Math.cos(a) * LR, y = Math.sin(a) * LR;
+      const anchor = Math.abs(x) < 12 ? 'middle' : (x > 0 ? 'start' : 'end');
+      const dy = y < -20 ? -2 : (y > 20 ? 12 : 5);
+      g += '<text class="axlbl" text-anchor="' + anchor + '" x="' + x.toFixed(1) + '" y="' + (y + dy).toFixed(1) + '">' + esc(f(r.d, 'short')) + '</text>';
+    });
+    const label = rows.map(r => f(r.d, 'short') + ' ' + fmt(r.you)).join(', ');
+    return '<svg viewBox="-215 -150 430 290" role="img" aria-label="' + esc(label) + '">' + g + '</svg>';
+  }
+
+  function compareHTML() {
+    const cmp = D.stagesSorted.find(s => s.id === S.compare) || D.stagesSorted[0];
+    const bset = D.bench[cmp.id] || {};
+    const rows = D.dims.map(d => ({ d, you: dimScore(d), b: bset[d.id] ? bset[d.id].score : null }));
+    const nVals = Object.values(bset).map(x => x.n).filter(Boolean);
+    const n = nVals.length ? nVals[0] : '–';
+    const options = D.stagesSorted.map(s => '<option value="' + esc(s.id) + '"' + (s.id === cmp.id ? ' selected' : '') + '>' + esc(f(s, 'name')) + '</option>').join('');
+    const dimRows = rows.map(r => {
+      const gap = (r.you != null && r.b != null) ? r.you - r.b : null;
+      const gcls = gap == null ? '' : (gap < -0.05 ? ' neg' : (gap > 0.05 ? ' pos' : ''));
+      return '<div class="dimrow">' +
+        '<span class="dname">' + esc(f(r.d, 'name')) + '</span>' +
+        '<span class="vals"><span class="you-v">' + (r.you == null ? '–' : fmt(r.you)) + '</span><span class="b-v">' + fmt(r.b) + '</span><span class="gap' + gcls + '">' + fmtGap(gap) + '</span></span>' +
+        '<span class="bar" aria-hidden="true">' +
+          (r.you != null ? '<span class="fill" style="width:' + (r.you / 5 * 100).toFixed(1) + '%"></span>' : '') +
+          (r.b != null ? '<span class="tick" style="left:' + (r.b / 5 * 100).toFixed(1) + '%"></span>' : '') +
+        '</span>' +
+        '</div>';
+    }).join('');
+    return '<div class="compare">' +
+      '<div class="panel radar">' +
+        '<div class="panel-head"><h2>' + esc(t('results_title')) + '</h2>' +
+          '<label class="selectwrap" for="cmpSel">' + esc(t('compare_with')) + ' <select id="cmpSel">' + options + '</select></label></div>' +
+        radarSVG(rows) +
+        '<div class="legend"><span><i class="sw"></i>' + esc(t('you_legend')) + '</span>' +
+          '<span><i class="sw b"></i>' + esc(t('bench_legend', { stage: f(cmp, 'name'), n: n })) + '</span></div>' +
+      '</div>' +
+      '<div class="panel">' +
+        '<div class="panel-head"><h2>' + esc(t('by_area')) + '</h2></div>' +
+        '<div class="dims-head label"><span>' + esc(t('col_area')) + '</span><span class="vals"><span>' + esc(t('col_you')) + '</span><span>' + esc(t('col_bench')) + '</span><span>' + esc(t('col_gap')) + '</span></span></div>' +
+        '<div class="dims">' + dimRows + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function renderResults() {
+    const c = counts();
+    const ov = overallScore();
+    const st = stageFor(ov);
+    if (!S.compare || !D.stagesSorted.some(s => s.id === S.compare)) S.compare = st.id;
+    const name = S.example ? t('example_name') : (S.name || '');
+
+    // stage scale
+    const bands = D.stagesSorted.map((s, k) => {
+      const from = Math.max(1, num(s.min_score));
+      const next = D.stagesSorted[k + 1];
+      const to = next ? num(next.min_score) : 5;
+      const w = Math.max(0, (to - from) / 4 * 100);
+      return { w: w.toFixed(2), k: Math.min(k, 3), name: f(s, 'name') };
+    });
+    const bandNames = bands.map(b => '<span style="width:' + b.w + '%">' + esc(b.name) + '</span>').join('');
+    const bandBars = bands.map(b => '<span class="band b' + b.k + '" style="width:' + b.w + '%"></span>').join('');
+    const ticks = [1, 2, 3, 4, 5].map(v => '<span style="left:' + ((v - 1) / 4 * 100) + '%">' + v + '</span>').join('');
+    const marker = ov == null ? '' : '<span class="marker" style="left:' + ((ov - 1) / 4 * 100).toFixed(2) + '%"></span>';
+
+    // advice, weakest first
+    const ranked = D.dims.map(d => ({ d, v: dimScore(d) })).filter(x => x.v != null).sort((a, b) => a.v - b.v);
+    const tips = ranked.map(x => {
+      const a = adviceFor(x.d, x.v);
+      if (!a) return '';
+      const lbl = f(a, 'link_label');
+      const learn = lbl
+        ? '<p class="learn">' + esc(t('learn_more')) + ': ' +
+          (a.link_url ? '<a href="' + esc(a.link_url) + '" target="_blank" rel="noopener">' + esc(lbl) + '</a>'
+                      : esc(lbl) + ' <span class="pending">(' + esc(t('link_pending')) + ')</span>') + '</p>'
+        : '';
+      return '<article class="tip"><span class="code">' + esc(x.d.id) + '</span><h3>' + esc(f(x.d, 'name')) + '</h3>' +
+        '<span class="chip">' + fmt(x.v) + '</span>' +
+        '<div class="body"><p>' + esc(f(a, 'advice')) + '</p>' + learn + '</div></article>';
+    }).join('');
+
+    const unanswered = c.n - c.a;
+    view.innerHTML =
+      '<div class="res">' +
+        '<section class="res-head">' +
+          '<p class="eyebrow">' + esc(t('results_title')) + '</p>' +
+          '<h1 class="display">' + esc(name || t('app_title')) + '</h1>' +
+          '<div class="sub">' +
+            (S.example ? '<span class="badge">' + esc(t('example_badge')) + '</span>' : '') +
+            '<span>' + esc(t('based_on', { a: c.scored, n: c.n })) + '</span>' +
+            (unanswered > 0 ? '<span>' + esc(t('unanswered_warn', { n: unanswered })) + '</span>' : '') +
+          '</div>' +
+        '</section>' +
+        '<section class="scorecard">' +
+          '<div class="big"><span class="label">' + esc(t('overall')) + '</span><span class="valrow"><span class="value">' + fmt(ov) + '</span><span class="of">/ 5</span></span></div>' +
+          '<div class="stagebox"><span class="label">' + esc(t('stage')) + '</span>' +
+            '<span class="pill">' + esc(f(st, 'name')) + '</span><p>' + esc(f(st, 'description')) + '</p></div>' +
+          '<div class="scale" aria-hidden="true"><div class="bandnames">' + bandNames + '</div><div class="track">' + bandBars + marker + '</div><div class="ticks">' + ticks + '</div></div>' +
+        '</section>' +
+        '<section id="cmpArea">' + compareHTML() + '</section>' +
+        '<section class="advice"><div class="advice-head"><h2>' + esc(t('next_steps')) + '</h2><p>' + esc(t('next_steps_sub')) + '</p></div>' +
+          '<div class="advice-list">' + tips + '</div></section>' +
+        '<section class="res-actions">' +
+          '<div class="actions">' +
+            '<button type="button" class="btn primary" data-action="copy">' + esc(t('copy_csv')) + '</button>' +
+            (EMBEDDED ? '' :
+              '<button type="button" class="btn" data-action="download">' + esc(t('download_csv')) + '</button>' +
+              '<button type="button" class="btn" data-action="print">' + esc(t('save_pdf')) + '</button>') +
+            '<button type="button" class="btn" data-action="edit">' + esc(t('edit_answers')) + '</button>' +
+            '<button type="button" class="btn quiet" data-action="ask-reset">' + esc(t('start_over')) + '</button>' +
+            '<span class="toast" id="toast" role="status"></span>' +
+          '</div>' +
+          '<div class="confirm" id="confirmBox" hidden><p>' + esc(t('confirm_reset')) + '</p>' +
+            '<button type="button" class="btn" data-action="cancel-reset">' + esc(t('confirm_no')) + '</button>' +
+            '<button type="button" class="btn primary" data-action="reset">' + esc(t('confirm_yes')) + '</button></div>' +
+          '<div class="copybox" id="copyBox" hidden><p>' + esc(t('copy_fallback')) + '</p><textarea id="copyText" readonly></textarea></div>' +
+        '</section>' +
+      '</div>';
+  }
+
+  function resultsCSV() {
+    const ov = overallScore(), st = stageFor(ov);
+    const cmp = D.bench[S.compare] || {};
+    const cell = v => { const s = String(v == null ? '' : v); return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+    const r2 = v => v == null ? '' : v.toFixed(2);
+    const rows = [['type', 'id', 'label', 'value', 'benchmark']];
+    rows.push(['meta', 'community', '', S.example ? t('example_name') : S.name, '']);
+    rows.push(['meta', 'date', '', new Date().toISOString().slice(0, 10), '']);
+    rows.push(['meta', 'language', '', S.lang, '']);
+    rows.push(['meta', 'compared_with', '', S.compare, '']);
+    rows.push(['overall', '', '', r2(ov), '']);
+    rows.push(['stage', st.id, f(st, 'name'), '', '']);
+    D.dims.forEach(d => rows.push(['dimension', d.id, f(d, 'name'), r2(dimScore(d)), cmp[d.id] ? r2(cmp[d.id].score) : '']));
+    D.qs.forEach(q => { const a = S.answers[q.id]; rows.push(['question', q.id, f(q, 'question'), a === 0 ? 'NA' : (a == null ? '' : a), '']); });
+    return rows.map(r => r.map(cell).join(',')).join('\r\n');
+  }
+
+  // ---------- render ----------
+  function render() {
+    renderChrome();
+    if (S.view === 'questions') renderQuestions();
+    else if (S.view === 'results') renderResults();
+    else renderIntro();
+  }
+  function go(viewName, step) {
+    S.view = viewName;
+    if (step != null) S.step = step;
+    if (viewName === 'results') S.compare = null;
+    persist();
+    render();
+    try { window.scrollTo({ top: 0 }); } catch (e) { window.scrollTo(0, 0); }
+  }
+
+  // ---------- events ----------
+  document.getElementById('langs').addEventListener('click', e => {
+    const b = e.target.closest('[data-lang]');
+    if (!b) return;
+    S.lang = b.getAttribute('data-lang');
+    persist();
+    render();
+  });
+
+  view.addEventListener('input', e => {
+    if (e.target.id === 'cname') { S.name = e.target.value; persist(); }
+  });
+
+  view.addEventListener('change', e => {
+    const el = e.target;
+    if (el.type === 'radio') {
+      if (S.example) { S.example = false; S.name = ''; }
+      S.answers[el.name] = Number(el.value);
+      persist();
+      refreshProgress();
+    } else if (el.id === 'cmpSel') {
+      S.compare = el.value;
+      document.getElementById('cmpArea').innerHTML = compareHTML();
+    }
+  });
+
+  view.addEventListener('click', e => {
+    const b = e.target.closest('[data-action]');
+    if (!b) return;
+    const act = b.getAttribute('data-action');
+    if (act === 'start') {
+      if (S.example) { S.answers = {}; S.example = false; }
+      const firstOpen = D.dims.findIndex(d => !dimProgress(d).done);
+      go('questions', firstOpen < 0 ? 0 : firstOpen);
+    } else if (act === 'example') {
+      S.answers = {};
+      D.example.forEach(r => { const v = num(r.answer); if (v != null) S.answers[r.question_id] = v; });
+      S.example = true;
+      go('results');
+    } else if (act === 'goto') go('questions', Number(b.getAttribute('data-step')));
+    else if (act === 'next') go('questions', S.step + 1);
+    else if (act === 'prev') go('questions', S.step - 1);
+    else if (act === 'results') go('results');
+    else if (act === 'edit') go('questions', 0);
+    else if (act === 'ask-reset') document.getElementById('confirmBox').hidden = false;
+    else if (act === 'cancel-reset') document.getElementById('confirmBox').hidden = true;
+    else if (act === 'reset') {
+      S.answers = {}; S.example = false; S.name = ''; S.step = 0;
+      go('intro');
+    } else if (act === 'copy') {
+      const text = resultsCSV();
+      const done = () => { const tEl = document.getElementById('toast'); tEl.textContent = t('copied'); setTimeout(() => { tEl.textContent = ''; }, 2500); };
+      const fallback = () => {
+        const box = document.getElementById('copyBox'); const ta = document.getElementById('copyText');
+        box.hidden = false; ta.value = text; ta.focus(); ta.select();
+      };
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+        else fallback();
+      } catch (err) { fallback(); }
+    } else if (act === 'download') {
+      const blob = new Blob(['﻿' + resultsCSV()], { type: 'text/csv;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'maturity-check-' + new Date().toISOString().slice(0, 10) + '.csv';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    } else if (act === 'print') {
+      window.print();
+    }
+  });
+
+  // ---------- start ----------
+  function showError(err) {
+    console.error(err);
+    view.innerHTML = '<div class="error"><p><strong>The data files could not be loaded.</strong></p>' +
+      '<p>Open the page through a web address (for example GitHub Pages or a local web server), not by double-clicking the file.</p>' +
+      '<p lang="el">Τα αρχεία δεδομένων δεν φορτώθηκαν. Ανοίξτε τη σελίδα μέσω διεύθυνσης ιστού και όχι με διπλό κλικ στο αρχείο.</p></div>';
+  }
+
+  Promise.all(Object.keys(FILES).map(k =>
+    fetch(FILES[k], { cache: 'no-cache' })
+      .then(r => { if (!r.ok) throw new Error(FILES[k] + ' (' + r.status + ')'); return r.text(); })
+      .then(txt => [k, parseCSV(txt)])
+  )).then(entries => {
+    entries.forEach(([k, v]) => { D[k] = v; });
+    prepare();
+    const had = restore();
+    if (!had) {
+      const nav = (navigator.language || 'en').slice(0, 2).toLowerCase();
+      S.lang = D.langs.includes(nav) ? nav : 'en';
+    }
+    if (!D.langs.includes(S.lang)) S.lang = D.langs[0] || 'en';
+    render();
+  }).catch(showError);
+})();
+</script>
+
+</body>
+</html>

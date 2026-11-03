@@ -1,0 +1,59 @@
+﻿key,en,el
+lang_label,EN,ΕΛ
+lang_name,English,Ελληνικά
+app_title,Energy Community Maturity Check,Έλεγχος Ωριμότητας Ενεργειακής Κοινότητας
+project_tag,ECHO · Community Benchmarking and Learning Toolkit,ECHO · Εργαλειοθήκη Συγκριτικής Αξιολόγησης και Μάθησης
+prototype_note,"Prototype. Sample questions and illustrative benchmark data, not real pilot results.","Πρωτότυπο. Ενδεικτικές ερωτήσεις και ενδεικτικά δεδομένα σύγκρισης, όχι πραγματικά αποτελέσματα πιλοτικών."
+intro_title,Where does your energy community stand?,Σε ποιο σημείο βρίσκεται η ενεργειακή σας κοινότητα;
+intro_text,"Answer {n} short questions across five areas. You get a maturity score for each area, a comparison with communities at a similar stage, and suggested next steps. It takes about 10 minutes.","Απαντήστε σε {n} σύντομες ερωτήσεις σε πέντε τομείς. Θα λάβετε βαθμολογία ωριμότητας ανά τομέα, σύγκριση με κοινότητες σε παρόμοιο στάδιο και προτεινόμενα επόμενα βήματα. Χρειάζονται περίπου 10 λεπτά."
+privacy_note,Your answers stay in this browser. Nothing is sent to or stored on a server.,Οι απαντήσεις σας μένουν σε αυτόν τον φυλλομετρητή. Τίποτα δεν αποστέλλεται ούτε αποθηκεύεται σε διακομιστή.
+name_label,Community name (optional),Όνομα κοινότητας (προαιρετικό)
+name_placeholder,e.g. Solar Village Energy Community,π.χ. Ενεργειακή Κοινότητα Ηλιακό Χωριό
+start,Start the assessment,Έναρξη αξιολόγησης
+resume,Continue where you left off,Συνέχεια από εκεί που σταματήσατε
+example,See an example result,Δείτε ένα παράδειγμα αποτελέσματος
+areas_title,The five areas,Οι πέντε τομείς
+questions_count,{n} questions,{n} ερωτήσεις
+step_of,Area {i} of {n},Τομέας {i} από {n}
+dont_know,Don't know / not applicable,Δεν γνωρίζω / δεν ισχύει
+back,Back,Πίσω
+next,Next area,Επόμενος τομέας
+see_results,See results,Δείτε τα αποτελέσματα
+answered,{a} of {n} answered,{a} από {n} απαντήθηκαν
+unanswered_warn,{n} questions are unanswered. They are left out of the scores.,{n} ερωτήσεις δεν έχουν απαντηθεί. Δεν προσμετρώνται στις βαθμολογίες.
+results_title,Maturity profile,Προφίλ ωριμότητας
+example_badge,Example answers from a fictional community,Παράδειγμα απαντήσεων φανταστικής κοινότητας
+example_name,Example Energy Community,Παράδειγμα Ενεργειακής Κοινότητας
+overall,Overall score,Συνολική βαθμολογία
+stage,Stage,Στάδιο
+based_on,Based on {a} of {n} answers,Με βάση {a} από {n} απαντήσεις
+compare_with,Compare with,Σύγκριση με
+bench_legend,"Pilot average, {stage} (n = {n}, illustrative)","Μέσος όρος πιλοτικών, {stage} (n = {n}, ενδεικτικά)"
+you_legend,Your community,Η κοινότητά σας
+col_area,Area,Τομέας
+col_you,You,Εσείς
+col_bench,Pilots,Πιλοτικά
+col_gap,Difference,Διαφορά
+by_area,Score by area,Βαθμολογία ανά τομέα
+next_steps,Suggested next steps,Προτεινόμενα επόμενα βήματα
+next_steps_sub,Weakest areas first.,Πρώτα οι πιο αδύναμοι τομείς.
+learn_more,Learning material,Εκπαιδευτικό υλικό
+link_pending,link to be added,ο σύνδεσμος θα προστεθεί
+copy_csv,Copy results (CSV),Αντιγραφή αποτελεσμάτων (CSV)
+copied,Copied to clipboard,Αντιγράφηκε
+copy_fallback,Select the text below and copy it.,Επιλέξτε το παρακάτω κείμενο και αντιγράψτε το.
+download_csv,Download CSV,Λήψη CSV
+save_pdf,Save as PDF,Αποθήκευση ως PDF
+edit_answers,Edit answers,Επεξεργασία απαντήσεων
+start_over,Start over,Νέα αξιολόγηση
+confirm_reset,Clear all answers and start over?,Διαγραφή όλων των απαντήσεων και νέα αξιολόγηση;
+confirm_yes,Clear answers,Διαγραφή
+confirm_no,Cancel,Άκυρο
+not_scored,Not scored,Χωρίς βαθμολογία
+level,Level,Επίπεδο
+how_title,How this prototype works,Πώς λειτουργεί το πρωτότυπο
+how_text,"Every question, stage, benchmark, piece of advice and label on this page is read from the CSV files below. Edit them in Excel and upload them to change the tool. No programming is needed.","Κάθε ερώτηση, στάδιο, τιμή σύγκρισης, συμβουλή και ετικέτα της σελίδας διαβάζεται από τα παρακάτω αρχεία CSV. Επεξεργαστείτε τα στο Excel και ανεβάστε τα για να αλλάξετε το εργαλείο, χωρίς προγραμματισμό."
+rows,rows,γραμμές
+funding,Funded by the European Union under grant agreement No 101185725 (ECHO). Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or the European Research Executive Agency (REA). Neither the European Union nor the granting authority can be held responsible for them.,Χρηματοδοτείται από την Ευρωπαϊκή Ένωση στο πλαίσιο της συμφωνίας επιχορήγησης αριθ. 101185725 (ECHO). Οι απόψεις και οι γνώμες που διατυπώνονται εκφράζουν αποκλειστικά τους συντάκτες και δεν αντιπροσωπεύουν κατ' ανάγκη τις απόψεις της Ευρωπαϊκής Ένωσης ή του Ευρωπαϊκού Εκτελεστικού Οργανισμού Έρευνας (REA). Ούτε η Ευρωπαϊκή Ένωση ούτε η αρχή χορήγησης μπορούν να θεωρηθούν υπεύθυνες για αυτές.
+made_by,Developed by Electra Energy with the ECHO partners. Open source under the MIT licence; data under CC BY 4.0.,Αναπτύχθηκε από την Electra Energy με τους εταίρους του ECHO. Ανοιχτός κώδικας με άδεια MIT· δεδομένα με άδεια CC BY 4.0.
+load_error,"The data files could not be loaded. Open the page through a web address (for example GitHub Pages or a local web server), not by double-clicking the file.",Τα αρχεία δεδομένων δεν φορτώθηκαν. Ανοίξτε τη σελίδα μέσω διεύθυνσης ιστού (π.χ. GitHub Pages ή τοπικό διακομιστή) και όχι με διπλό κλικ στο αρχείο.

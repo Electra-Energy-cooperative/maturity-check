@@ -1,0 +1,6 @@
+﻿id,weight,name_en,short_en,description_en,name_el,short_el,description_el
+GOV,1,Governance & legal,Governance,"Legal form, decision-making, membership and handling of regulation.",Διακυβέρνηση & νομικό πλαίσιο,Διακυβέρνηση,"Νομική μορφή, λήψη αποφάσεων, συμμετοχή μελών και διαχείριση του ρυθμιστικού πλαισίου."
+TEC,1,Technical & energy,Technical,"Generation assets, monitoring, self-consumption and energy efficiency.",Τεχνικά & ενεργειακά,Τεχνικά,"Μονάδες παραγωγής, παρακολούθηση, αυτοκατανάλωση και ενεργειακή αποδοτικότητα."
+ECO,1,Economic & financial,Economic,"Financing, business model, financial management and benefits for members.",Οικονομικά & χρηματοδότηση,Οικονομικά,"Χρηματοδότηση, επιχειρηματικό μοντέλο, οικονομική διαχείριση και οφέλη για τα μέλη."
+SOC,1,Social & engagement,Social,"Member participation, communication, local partnerships, trust and satisfaction.",Κοινωνική διάσταση & συμμετοχή,Κοινωνικά,"Συμμετοχή μελών, επικοινωνία, τοπικές συνεργασίες, εμπιστοσύνη και ικανοποίηση."
+SRV,1,Services & innovation,Services,"Range of services, demand flexibility, storage and e-mobility, and innovation partnerships.",Υπηρεσίες & καινοτομία,Υπηρεσίες,"Εύρος υπηρεσιών, ευελιξία ζήτησης, αποθήκευση και ηλεκτροκίνηση, συνεργασίες καινοτομίας."

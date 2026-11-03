@@ -1,0 +1,4 @@
+﻿id,min_score,name_en,description_en,name_el,description_el
+emerging,1.0,Emerging,"Building the foundations: legal form, first members and a first project.",Αναδυόμενη,"Χτίζει τα θεμέλια: νομική μορφή, πρώτα μέλη και πρώτο έργο."
+early,2.25,Early-stage,First services are running. The focus is on consolidating operations and membership.,Σε αρχικό στάδιο,Λειτουργούν οι πρώτες υπηρεσίες. Το βάρος πέφτει στην εδραίωση της λειτουργίας και της συμμετοχής.
+mature,3.5,Mature,"Stable operations, ready for advanced services and for scaling up.",Ώριμη,"Σταθερή λειτουργία, έτοιμη για προηγμένες υπηρεσίες και επέκταση."
